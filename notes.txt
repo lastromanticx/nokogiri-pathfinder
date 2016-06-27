@@ -25,3 +25,8 @@ Nokogiri::XML::NodeSet[
       or Nokogiri::XML::Element
     ]
 ]
+
+06/27/2016
+Attributes that have a value with a possible match: a:href; img:src,alt;
+
+Achieved basic success in collecting the classes along the path.
