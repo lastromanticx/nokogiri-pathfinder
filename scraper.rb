@@ -5,6 +5,24 @@ require 'pry'
 
 # test code for cli assessment
 class SearchEngine
+  def self.match_attributes(node,needle_lower_case)
+    case node.name
+    when "a"
+      if node.attribute("href") and node.attribute("href").value.downcase.match(needle_lower_case)
+        ".attribute('href').value"
+      end
+
+    when "img"
+      if node.attribute("src") and node.attribute("src").value.downcase.match(needle_lower_case)
+        "attribute('src').value"
+      end
+
+      if node.attribute("alt") and node.attribute("alt").value.downcase.match(needle_lower_case)
+        ".attribute('alt').value"
+      end
+    end
+  end
+
   def self.find(nokogiri_html,needle)
     needle_lower_case = needle.downcase
     # results
@@ -26,20 +44,9 @@ class SearchEngine
       elsif curr.class == Nokogiri::XML::Element
         class_str = curr.name + if curr.attribute("class") then "." + curr.attribute("class").value.match(/\S+/).to_s else "" end + " "
 
-        case curr.name
-        when "a"
-          if curr.attribute("href") and curr.attribute("href").value.downcase.match(needle_lower_case)
-            node_paths << [path + ".attribute('href').value", classes + class_str]
-          end
-
-        when "img"
-          if curr.attribute("src") and curr.attribute("src").value.downcase.match(needle_lower_case)
-            node_paths << path + [".attribute('src').value", classes + class_str]
-          end
-
-          if curr.attribute("alt") and curr.attribute("alt").value.downcase.match(needle_lower_case)
-            node_paths << path + [".attribute('alt').value", classes + class_str]
-          end
+        matched_attribute = match_attributes(curr, needle_lower_case)
+        if matched_attribute
+          node_paths << [path + matched_attribute,classes + class_str]
         end
 
         (0..curr.children.size - 1).each do |i|
@@ -87,37 +94,6 @@ binding.pry
     end
 
     cards
-  end
-
-  # social profile.css('div.social-icon-container a')[INDEX].attribute('href').value
-  # profile_quote profile.css('div.profile-quote').text
-  # bio profile.css('div.bio-block p').text
-
-  def self.scrape_profile_page(url)
-    html = open(url)
-    profile = Nokogiri::HTML(html)
-    result = {}
-
-    # get name
-    name = profile.css('h1.profile-name').text.downcase.split(/\s+/)
-
-    # get social links
-    profile.css('div.social-icon-container a').each do |a|
-      uri = URI.parse(a.attribute('href').value)
-      key = /(www.)?[^.]+/.match(uri.hostname).to_s.gsub(/www\./,'')
-      
-      if (key).match(name[1]) then key = :blog end
-
-      result[key.to_sym] = a.attribute('href').value
-    end
- 
-    # get profile quote
-    result[:profile_quote] = profile.css('div.profile-quote').text
-
-    # get bio
-    result[:bio] = profile.css('div.bio-block p').text
-
-    result
   end
 end
 

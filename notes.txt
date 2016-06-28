@@ -32,4 +32,5 @@ Attributes that have a value with a possible match: a:href; img:src,alt;
 Achieved basic success in collecting the classes along the path.
 
 06/28/2016
-achieved shortest css string to call for single search but it's a little slow
+-achieved shortest css string to call for single search but it's a little slow
+-extracted the tests for attributes as its own function
