@@ -24,7 +24,7 @@ class SearchEngine
       # if the class is 'element', check for a match in attribute values,
       # save classes, and traverse the children
       elsif curr.class == Nokogiri::XML::Element
-        class_str = curr.name + if curr.attribute("class") then "." + curr.attribute("class").value else "" end + "; "
+        class_str = curr.name + if curr.attribute("class") then "." + curr.attribute("class").value.match(/\S+/).to_s else "" end + " "
 
         case curr.name
         when "a"
@@ -49,6 +49,20 @@ class SearchEngine
       end
     end
 
+    # extract shortest css call
+    if !node_paths.empty?
+      css_arr = node_paths[0][1].split(' ')
+      shortest = css_arr.pop
+
+      while !nokogiri_html.css(shortest).any? { 
+              |node| node.text.downcase.match(needle_lower_case) or (node.attribute("href") and node.attribute("href").value.downcase.match(needle_lower_case)) or (node.attribute("src") and node.attribute("src").value.downcase.match(needle_lower_case)) or (node.attribute("alt") and node.attribute("alt").value.downcase.match(needle_lower_case))
+            }
+      
+        shortest = css_arr.pop + shortest
+      end
+    end 
+
+    node_paths << shortest
     node_paths
   end
 end
