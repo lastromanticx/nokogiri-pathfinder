@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+require_relative '../lib/nokogiri_pathfinder.rb'
+#require 'now_playing'
+
+NokogiriPathfinder::CLI.new.call

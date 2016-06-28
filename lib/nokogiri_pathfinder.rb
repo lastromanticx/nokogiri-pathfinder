@@ -8,8 +8,8 @@ require_relative "nokogiri_pathfinder/query"
 
 module NokogiriPathfinder
 end
-
+=begin
 url = 'http://127.0.0.1:4000/fixtures/student-site/'
 query = NokogiriPathfinder::Query.new(url,"Glenelg, MD")
 puts query.find
-
+=end
