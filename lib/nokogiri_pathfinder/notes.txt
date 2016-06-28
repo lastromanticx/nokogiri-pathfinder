@@ -1,0 +1,37 @@
+June 25, 2016
+
+My idea for the CLI project, is to make a "path finder" that automates the discovery of an appropriate Nokogiri css path to fetch a group of elements with similar paths. To take the student scraper lab as an example, by inputing the text of two students' first names, the path finder should return the appropriate Nokogiri css path that we can iterate over to fetch all students' first names, assuming the paths would be similar.
+
+Experimenting with Nokogiri, I see that the Nokogiri::HTML::Document '.css', '.xpath', and '.search' methods evaluate to the class, 'Nokogiri::XML::NodeSet'. Although both .css and .css('div') evaluate as nodesets, only the latter seems to respond to Ruby's .each method.
+
+For now, rather than trying to first enumerate available css starting points, we can rely on a few common .css searches, such as .css('div'), .css('img'), .css('p') etc., divs likely yielding longer paths that are more likely to reveal shared ancestry.
+
+The Nokogiri tree as it appears in the student-site example:
+
+     .css('div')
+
+Nokogiri::XML::NodeSet[
+  Nokogiri::XML::Element
+    .name: string,
+    .attributes: Hash{    # .each_key can return the keys of the attributes
+                   string: Nokogiri::XML::Attr
+                             name: string,
+                             value: string
+                 },
+    .children: Nokogiri::XML::NodeSet[
+      Nokogiri::XML::Text 
+        .text: string
+
+      or Nokogiri::XML::Element
+    ]
+]
+
+06/27/2016
+Attributes that have a value with a possible match: a:href; img:src,alt;
+
+Achieved basic success in collecting the classes along the path.
+
+06/28/2016
+-achieved shortest css string to call for single search but it's a little slow
+-extracted the tests for attributes as its own function
+-named the project, created initial module and directory structure

@@ -1,0 +1,3 @@
+class NokogiriPathfinder::CLI
+
+end
