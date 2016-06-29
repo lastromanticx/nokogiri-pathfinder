@@ -28,14 +28,14 @@ class NokogiriPathfinder::CLI
     query = NokogiriPathfinder::Query.new(url,needle)
     results = query.find
 
-    puts "Results:"
-    results.each{|result| puts result.to_s}
+    puts "\nResults:"
+    results.each{|result| puts "\n" + result.to_s}
   end
 
   def call
     welcome
     input = get_input
     process(input)
-    puts "Goodbye, for now."
+    puts "\nGoodbye, for now."
   end
 end
