@@ -4,13 +4,21 @@ require 'uri'
 require 'pry'
 
 class NokogiriPathfinder::Query
-  attr_reader :url, :nokogiri_html
+  attr_reader :url, :search_term, :nokogiri_html, :paths
   attr_accessor :needle, :second_needle
 
+  @@all
+
+  def self.all
+    @@all
+  end
+
   def initialize(url,needle,second_needle=nil)
-    @needle = needle
+    @search_term = needle
+    @needle = needle.downcase
     @second_needle = second_needle
     @nokogiri_html = NokogiriPathfinder::Handle.new(url).nokogiri_html
+    @paths = []
   end
 
   def url=(url)
@@ -18,9 +26,6 @@ class NokogiriPathfinder::Query
   end
 
   def find
-    needle_lower_case = needle.downcase
-    # results
-    node_paths = []
             # root node, node_path_string, classes_string
     stack = [[@nokogiri_html.css('body')[0],".css('body')[0]",""]]
 
@@ -29,8 +34,9 @@ class NokogiriPathfinder::Query
       
       # if the class is 'text', check for a match
       if curr.class == Nokogiri::XML::Text
-        if curr.text.downcase.match(needle_lower_case)
-          node_paths << [path + ".text", classes]
+        if curr.text.downcase.match(@needle)
+          @paths << {:node_path => path + ".text", 
+                     :class_path => classes}
         end
 
       # if the class is 'element', save class, check for
@@ -38,9 +44,10 @@ class NokogiriPathfinder::Query
       elsif curr.class == Nokogiri::XML::Element
         class_str = curr.name + if curr.attribute("class") then "." + curr.attribute("class").value.match(/\S+/).to_s else "" end + " "
 
-        matched_attribute = match_attributes(curr, needle_lower_case)
+        matched_attribute = match_attributes(curr)
         if matched_attribute
-          node_paths << [path + matched_attribute,classes + class_str]
+          @paths << {:node_path => path + matched_attribute, 
+                     :class_path => classes + class_str}
         end
 
         (0..curr.children.size - 1).each do |i|
@@ -50,35 +57,42 @@ class NokogiriPathfinder::Query
       end
     end
 
-    # extract shortest css call
-    if !node_paths.empty?
-      css_arr = node_paths[0][1].split(' ')
-      shortest = css_arr.pop
-
-      while !nokogiri_html.css(shortest).any? {|node| node.text.downcase.match(needle_lower_case) or match_attributes(node, needle_lower_case)}
-        shortest = css_arr.pop + shortest
-      end
-    end 
-
-    node_paths << shortest
-    node_paths
+    attenuate
   end
 
   private
 
-  def match_attributes(node,needle_lower_case)
+  def attenuate
+    # extract shortest css call
+    if !@paths.empty?
+      @paths.each.with_index do |path,i|  
+        css_arr = path[:class_path].split(' ')
+        shortest = css_arr.pop
+
+        while !@nokogiri_html.css(shortest).any? {|node| node.text.downcase.match(@needle) or match_attributes(node)}
+          shortest = css_arr.pop + shortest
+        end
+
+        @paths[i][:short] = shortest
+      end
+    end
+
+    @paths
+  end
+
+  def match_attributes(node)
     case node.name
     when "a"
-      if node.attribute("href") and node.attribute("href").value.downcase.match(needle_lower_case)
+      if node.attribute("href") and node.attribute("href").value.downcase.match(@needle)
         ".attribute('href').value"
       end
 
     when "img"
-      if node.attribute("src") and node.attribute("src").value.downcase.match(needle_lower_case)
+      if node.attribute("src") and node.attribute("src").value.downcase.match(@needle)
         "attribute('src').value"
       end
 
-      if node.attribute("alt") and node.attribute("alt").value.downcase.match(needle_lower_case)
+      if node.attribute("alt") and node.attribute("alt").value.downcase.match(@needle)
         ".attribute('alt').value"
       end
     end

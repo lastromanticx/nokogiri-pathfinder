@@ -6,17 +6,17 @@ class NokogiriPathfinder::CLI
   end
 
   def get_input
-    puts "Hi. Please enter URL:" 
+    puts "\nPlease enter URL:" 
     url = gets.strip
     while url == ""
-      puts "Hmm..that URL seems to be blank, please enter a URL:"
+      puts "\nHmm..that URL seems to be blank, please enter a URL:"
       url = gets.strip
     end
 
-    puts = "Thanks. Please enter a needle:"
+    puts "\nPlease enter a needle:"
     needle = gets.strip
     while needle == ""
-      puts "Hmm..that needle seems to be empty, please enter a needle:"
+      puts "\nHmm..that needle seems to be empty, please enter a needle:"
       needle = gets.strip
     end
 
@@ -28,7 +28,7 @@ class NokogiriPathfinder::CLI
     query = NokogiriPathfinder::Query.new(url,needle)
     results = query.find
 
-    puts "Thanks again! Here are your results:"
+    puts "Results:"
     results.each{|result| puts result.to_s}
   end
 
