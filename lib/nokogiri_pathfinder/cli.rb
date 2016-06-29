@@ -5,6 +5,10 @@ class NokogiriPathfinder::CLI
     puts "\\*\\*\\*\\*\\*\\*/*/*/*/*/*/"
   end
 
+  def prompt
+    puts "\nPlease enter a command (help, find, history, clear, exit):"
+  end
+ 
   def get_input
     puts "\nPlease enter URL:" 
     url = gets.strip
@@ -34,8 +38,33 @@ class NokogiriPathfinder::CLI
 
   def call
     welcome
-    input = get_input
-    process(input)
-    puts "\nGoodbye, for now."
+    
+    while true
+      prompt
+      input = gets.strip
+
+      case input
+      when "help"
+        puts "\nFIND - generates the node path and shortest"
+        puts "Nokogiri::HTML CSS path to the search term."
+        puts "\nHISTORY - lists this session's search history"
+        puts "\nCLEAR - clears this session's history"
+        puts "\nHELP - displays this message"
+
+      when "find"
+        url_needle = get_input
+        process(url_needle)
+
+      when "history"
+        # to do
+
+      when "exit"
+        puts "\nGoodbye."
+        break
+  
+      else
+        puts "\nUnknown command. Please enter a command (type help for a list of commands):"
+      end
+    end
   end
 end

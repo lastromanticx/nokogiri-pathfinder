@@ -33,7 +33,7 @@ class NokogiriPathfinder::Query
       curr,path,classes = stack.pop
       
       # if the class is 'text', check for a match
-      if curr.class == Nokogiri::XML::Text
+      if curr.class == NokogiriPathfinder::NOKOGIRI_XML_TEXT
         if curr.text.downcase.match(@needle)
           @paths << {:node_path => path + ".text", 
                      :class_path => classes}
@@ -41,7 +41,7 @@ class NokogiriPathfinder::Query
 
       # if the class is 'element', save class, check for
       # a match in attribute values, and traverse the children
-      elsif curr.class == Nokogiri::XML::Element
+      elsif curr.class == NokogiriPathfinder::NOKOGIRI_XML_ELEMENT
         class_str = curr.name + if curr.attribute("class") then "." + curr.attribute("class").value.match(/\S+/).to_s else "" end + " "
 
         matched_attribute = match_attributes(curr)
