@@ -1,28 +1,38 @@
-require 'nokogiri'
-require 'open-uri'
-require 'uri'
-require 'pry'
-
 class NokogiriPathfinder::Query
-  attr_reader :url, :search_term, :nokogiri_html, :paths
-  attr_accessor :needle, :second_needle
+  attr_reader :url, :nokogiri_html, :paths
+  attr_accessor :search_term, :second_search_term, :options
 
-  @@all
+  @@all = []
 
   def self.all
     @@all
   end
 
-  def initialize(url,needle,second_needle=nil)
-    @search_term = needle
-    @needle = needle.downcase
-    @second_needle = second_needle
-    @nokogiri_html = NokogiriPathfinder::Handle.new(url).nokogiri_html
+  def self.clear
+    self.all.clear
+  end
+
+  def initialize(args)
+    @search_term = args[:search_term]
+    @second_search_term = args[:second_search_term]
+    @nokogiri_html = NokogiriPathfinder::Handle.new(args[:url]).nokogiri_html
+    @options = args[:options]
     @paths = []
+    self.class.all << self
+
+    # to do: handle file open error
   end
 
   def url=(url)
     @nokogiri_html = NokogiriPathfinder::Handle.new(url).nokogiri_html
+  end
+
+  def needle
+    @search_term.downcase
+  end
+
+  def second_needle
+    @second_search_term.downcase
   end
 
   def find
@@ -33,10 +43,11 @@ class NokogiriPathfinder::Query
       curr,path,classes = stack.pop
       
       # if the class is 'text', check for a match
-      if curr.class == NokogiriPathfinder::NOKOGIRI_XML_TEXT
-        if curr.text.downcase.match(@needle)
+      if options[:text] and curr.class == NokogiriPathfinder::NOKOGIRI_XML_TEXT
+        if curr.text.downcase.match(needle)
           @paths << {:node_path => path + ".text", 
-                     :class_path => classes}
+                     :class_path => classes,
+                     :object => curr.parent}
         end
 
       # if the class is 'element', save class, check for
@@ -47,7 +58,8 @@ class NokogiriPathfinder::Query
         matched_attribute = match_attributes(curr)
         if matched_attribute
           @paths << {:node_path => path + matched_attribute, 
-                     :class_path => classes + class_str}
+                     :class_path => classes + class_str,
+                     :object => curr}
         end
 
         (0..curr.children.size - 1).each do |i|
@@ -69,8 +81,9 @@ class NokogiriPathfinder::Query
         css_arr = path[:class_path].split(' ')
         shortest = css_arr.pop
 
-        while !@nokogiri_html.css(shortest).any? {|node| node.text.downcase.match(@needle) or match_attributes(node)}
-          shortest = css_arr.pop + shortest
+        # check for object rather than string match
+        while !@nokogiri_html.css(shortest).any?{|node| node == path[:object]}
+          shortest = css_arr.pop + " " + shortest
         end
 
         @paths[i][:short] = shortest
@@ -83,16 +96,16 @@ class NokogiriPathfinder::Query
   def match_attributes(node)
     case node.name
     when "a"
-      if node.attribute("href") and node.attribute("href").value.downcase.match(@needle)
+      if options[:href] and node.attribute("href") and node.attribute("href").value.downcase.match(needle)
         ".attribute('href').value"
       end
 
     when "img"
-      if node.attribute("src") and node.attribute("src").value.downcase.match(@needle)
+      if options[:src] and node.attribute("src") and node.attribute("src").value.downcase.match(needle)
         "attribute('src').value"
       end
 
-      if node.attribute("alt") and node.attribute("alt").value.downcase.match(@needle)
+      if options[:alt] and node.attribute("alt") and node.attribute("alt").value.downcase.match(needle)
         ".attribute('alt').value"
       end
     end
