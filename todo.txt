@@ -1,11 +1,11 @@
-# on single search, check for object rather than text match
-# options: (1) match href,src,alt (2) use pry
-# commands: find, history, clear
-# needle as nethod
-# attributes as iterating over options
+# [done] on single search, check for object rather than text match
+# [done] options: (1) match href,src,alt (2) use pry
+# [done] commands: find, history, clear
+# [done] needle as nethod
+# [done] attributes as iterating over options
 # hash paths by shortest css path, collecting the node paths
 # error check file open in Handle
-# data type aliases defined separately for monitoring types
+# [done] data type aliases defined separately for monitoring types
 
 def common_ancestry(query1,query2)
 # what if the css paths diverge? return 'diverge at'?
