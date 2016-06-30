@@ -17,7 +17,7 @@ class NokogiriPathfinder::Query
     @second_search_term = args[:second_search_term]
     @nokogiri_html = NokogiriPathfinder::Handle.new(args[:url]).nokogiri_html
     @options = args[:options]
-    @paths = []
+    @paths = {}
     self.class.all << self
 
     # to do: handle file open error
@@ -45,9 +45,17 @@ class NokogiriPathfinder::Query
       # if the class is 'text', check for a match
       if options[:text] and curr.class == NokogiriPathfinder::NOKOGIRI_XML_TEXT
         if curr.text.downcase.match(needle)
-          @paths << {:node_path => path + ".text", 
-                     :class_path => classes,
-                     :object => curr.parent}
+          if paths[classes]
+            accum_path = paths[classes][:node_paths][0]
+            node_path = path
+            merged_path = merge_node_paths(accum_path, node_path)
+            if merged_path
+              paths[classes][:node_path][0] = merged_path
+              paths[classes][:objects] << curr.parent
+            else
+              
+            end
+          end
         end
 
       # if the class is 'element', save class, check for
@@ -108,6 +116,49 @@ class NokogiriPathfinder::Query
       if options[:alt] and node.attribute("alt") and node.attribute("alt").value.downcase.match(needle)
         ".attribute('alt').value"
       end
+    end
+  end
+
+  def merge_node_paths(accumulator_path, path)
+    left = ""
+    middle1 = ""  # middles will store differing digits or commas
+    middle2 = ""
+    i = 0
+    
+    # get left part
+    while accumulator_path[i] == path[i]
+      left += path[i]
+      i += 1
+    end
+
+    # find the start of the middle section
+    i -=1
+    
+    while path[i].match(/\d/)
+      i -= 1
+      left = left[0..-2]
+    end
+    
+    # get middle
+    i += 1
+    j = i
+
+    while accumulator_path[i].match(/[0-9,]/)
+      middle1 += accumulator_path[i]
+      
+      i += 1
+    end
+    
+    while path[j].match(/\d/)
+      middle2 += path[j]
+      j += 1
+    end
+    
+    # allow difference in one node only
+    if accumulator_path[i..-1] != path[j..-1]
+      false
+    else
+      left + middle1 + "," + middle2 + path[j..-1]
     end
   end
 end

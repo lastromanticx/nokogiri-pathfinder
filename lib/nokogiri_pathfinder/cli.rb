@@ -9,7 +9,7 @@ class NokogiriPathfinder::CLI
     puts "\nPlease enter a command (help, find, history, clear, pry, exit):"
   end
  
-  def get_input
+  def get_input_for_find
     puts "\nPlease enter URL:" 
     url = gets.strip
     while url == ""
@@ -78,7 +78,7 @@ class NokogiriPathfinder::CLI
         puts "\nHELP - displays this message"
 
       when "find"
-        url_needle = get_input
+        url_needle = get_input_for_find
         process(url_needle)
 
       when "history"
