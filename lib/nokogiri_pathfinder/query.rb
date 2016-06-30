@@ -13,6 +13,7 @@ class NokogiriPathfinder::Query
   end
 
   def initialize(args)
+    @url = args[:url]
     @search_term = args[:search_term]
     @second_search_term = args[:second_search_term]
     @nokogiri_html = NokogiriPathfinder::Handle.new(args[:url]).nokogiri_html

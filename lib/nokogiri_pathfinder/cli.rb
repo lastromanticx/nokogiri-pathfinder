@@ -24,9 +24,12 @@ class NokogiriPathfinder::CLI
       search_term = gets.strip
     end
 
+# to do: add second search term
+    second_search_term = ""
+=begin
     puts "\nPlease enter a second search term (or press return to leave blank:)"
     second_search_term = gets.strip
-
+=end
     puts "\nPlease enter options separated by commas (text, href, alt, and/or src). Blank or unlisted will default to text:"
     options = gets.strip
     options_hash = {:text => false, 
@@ -86,7 +89,9 @@ class NokogiriPathfinder::CLI
           puts "\nHistory is empty"
         else     
           NokogiriPathfinder::Query.all.each.with_index(1) do |search,i|
-            puts "\n#{i}. Search-Term: #{search.search_term}"
+            puts "\n\n#{i}."
+            puts "\nSearch-Term: #{search.search_term}"
+            puts "\nURL : #{search.url}"
           end
         end
 
