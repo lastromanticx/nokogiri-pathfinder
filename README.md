@@ -1,13 +1,9 @@
-*************************
-** NOKOGIRI PATHFINDER **
-*************************
+NOKOGIRI PATHFINDER 
 
 Nokogiri Pathfinder is a tool to easily locate the proper Nokogiri .CSS path that contains the text you are interested in. Rather than, or along with, using a web browser's inspector, simply enter the url and search term, and Nokogiri Pathfinder will traverse the Nokogiri tree to find the shortest .CSS path to the node.
 
 
-******************
-*  Installation  *
-******************
+INSTALLATION
 
 Dependencies: open-uri, nokogiri, pry
 
@@ -21,9 +17,7 @@ cd nokogiri-pathfinder
 ruby bin/nokogiri-pathfinder
 
 
-******************
-*  Instructions  *
-******************
+INSTRUCTIONS
 
 The pathfinder is very simple:
 
