@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
   s.homepage    =
     'http://rubygems.org/gems/'
   s.license       = 'MIT'
-  s.add_runtime_dependency "nokogiri", '~> 0'
-  s.add_runtime_dependency "open-uri", '~> 0'
-  s.add_runtime_dependency "pry", '~> 0'
+  s.add_development_dependency "nokogiri"
+  s.add_development_dependency "open-uri"
+  s.add_development_dependency "pry"
 end
