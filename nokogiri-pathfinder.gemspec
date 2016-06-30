@@ -14,8 +14,6 @@ Gem::Specification.new do |s|
   s.email       = 'giladbarkan@live.com'
   s.files       = `git ls-files`.split($\)
   s.executables << "nokogiri-pathfinder"
-  s.homepage    =
-    'http://rubygems.org/gems/'
   s.license       = 'MIT'
   s.add_development_dependency "nokogiri"
   s.add_development_dependency "open-uri"
