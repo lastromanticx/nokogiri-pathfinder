@@ -34,3 +34,10 @@ Input a search string
 Input options separated by commas (default is text)
 Options describe which nodes will be tested for a match:
   text, href, alt, and/or src; or all for all
+
+
+ADDITIONAL COMMANDS
+
+Type 'pry' from within the CLI, to open a pry console, where the current objects in memory are available for further investigation.
+
+The 'NokogiriPathfinder::Query.merge_node_paths(accumulator_path, path)' method takes two node-path strings and merges them if they differ in only one index location. For example 'a.children[1].children[2].children[3].text' and 'a.children[1].children[4].children[3]' would return 'a.children[1].children[2,4].children[3]', which indicates locations for possible iteration. Such accumulation is planned to also be automated for search results in the next update of Nokogiri-Pathfinder.

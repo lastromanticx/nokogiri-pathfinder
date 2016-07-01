@@ -53,9 +53,9 @@ class NokogiriPathfinder::CLI
 
     results.each.with_index(1) do |result, i| 
       puts "\n\n#{i}.\n"
-      puts "Node-Path: \n\n" + result[:node_path].to_s
-      puts "\n\nCSS-Path: \n\n" + result[:class_path].to_s
-      puts "\n\nShortest CSS-Path: \n\n" + result[:short].to_s
+      puts "Node-Path: \n" + result[:node_path].to_s
+      puts "\n\nCSS-Path: \n" + result[:class_path].to_s
+      puts "\n\nShortest CSS-Path: \n" + result[:short].to_s
     end
   
     puts "\n\n/*/*/*/*/ END RESULTS \\*\\*\\*\\*\\"
