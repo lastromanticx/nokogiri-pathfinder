@@ -78,7 +78,7 @@ class NokogiriPathfinder::Query
         shortest = css_arr.pop
 
         # check for object rather than string match
-        while !@nokogiri_html.css(shortest).any?{|node| node == path[:object]}
+        while !@nokogiri_html.css(shortest).include?(path[:object])
           shortest = css_arr.pop + " " + shortest
         end
 
