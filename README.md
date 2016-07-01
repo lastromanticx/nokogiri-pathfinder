@@ -31,4 +31,4 @@ Input a search string
 
 Input options separated by commas (default is text)
 Options describe which nodes will be tested for a match:
-  text, href, alt, and/or src
+  text, href, alt, and/or src; or all for all
