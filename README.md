@@ -13,12 +13,14 @@ git clone https://github.com/lastromanticx/nokogiri-pathfinder
 2. Move into the gem's directory:
 cd nokogiri-pathfinder
 
-3. (optional) Build and install:
-gem build nokogiri-pathfinder.gemspec;
+4. Build:
+gem build nokogiri-pathfinder.gemspec
+
+5. Install:
 gem install nokogiri-pathfinder-0.1.0.gem
 
-4. To run the CLI from a terminal in the gem's directory, type:
-ruby bin/nokogiri-pathfinder
+5. To run the CLI from a terminal after installation, type:
+nokogiri-pathfinder
 
 
 INSTRUCTIONS
