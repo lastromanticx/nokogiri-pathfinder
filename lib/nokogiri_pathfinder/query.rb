@@ -66,6 +66,67 @@ class NokogiriPathfinder::Query
     attenuate
   end
 
+  def match_attributes(node)
+    case node.name
+    when "a"
+      if options[:href] and node.attribute("href") and needle.match(node.attribute("href").value)
+        ".attribute('href').value"
+      end
+
+    when "img"
+      if options[:src] and node.attribute("src") and needle.match(node.attribute("src").value)
+        "attribute('src').value"
+      end
+
+      if options[:alt] and node.attribute("alt") and needle.match(node.attribute("alt").value)
+        ".attribute('alt').value"
+      end
+    end
+  end
+
+  def self.merge_node_paths(accumulator_path, path)
+    left = ""
+    middle1 = ""  # middles will store differing digits or commas
+    middle2 = ""
+    i = 0
+    
+    # get left part
+    while accumulator_path[i] == path[i]
+      left += path[i]
+      i += 1
+    end
+
+    # find the start of the middle section
+    i -=1
+    
+    while path[i].match(/\d/)
+      i -= 1
+      left = left[0..-2]
+    end
+    
+    # get middle
+    i += 1
+    j = i
+
+    while accumulator_path[i].match(/[0-9,]/)
+      middle1 += accumulator_path[i]
+      
+      i += 1
+    end
+    
+    while path[j].match(/\d/)
+      middle2 += path[j]
+      j += 1
+    end
+    
+    # allow difference in one node only
+    if accumulator_path[i..-1] != path[j..-1]
+      false
+    else
+      left + middle1 + "," + middle2 + path[j..-1]
+    end
+  end
+
   private
 
   def attenuate
@@ -85,32 +146,5 @@ class NokogiriPathfinder::Query
     end
 
     @paths
-  end
-
-  def match_attributes(node)
-    case node.name
-    when "a"
-      if options[:href] and node.attribute("href") and needle.match(node.attribute("href").value)
-        ".attribute('href').value"
-      end
-
-    when "img"
-      if options[:src] and node.attribute("src") and needle.match(node.attribute("src").value)
-        "attribute('src').value"
-      end
-
-      if options[:alt] and node.attribute("alt") and needle.match(node.attribute("alt").value)
-        ".attribute('alt').value"
-      end
-    end
-  end
-end
-
-class NokogiriPathfinder::Handle
-  attr_reader :nokogiri_html
-
-  def initialize(url)
-    html = open(url)
-    @nokogiri_html = Nokogiri::HTML(html)
   end
 end

@@ -4,5 +4,6 @@ require 'nokogiri'
 
 require_relative "nokogiri_pathfinder/version"
 require_relative "nokogiri_pathfinder/datatypes"
+require_relative "nokogiri_pathfinder/handle.rb"
 require_relative "nokogiri_pathfinder/cli"
 require_relative "nokogiri_pathfinder/query"
