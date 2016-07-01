@@ -1,6 +1,6 @@
-NOKOGIRI PATHFINDER 
+NOKOGIRI PATHFINDER
 
-Nokogiri Pathfinder is a tool to easily locate the proper Nokogiri .CSS path that contains the text you are interested in. Rather than, or along with, using a web browser's inspector, simply enter the url and search term, and Nokogiri Pathfinder will traverse the Nokogiri tree to find the shortest .CSS path to the node.
+Nokogiri Pathfinder is a command line tool to easily locate the proper Nokogiri .CSS path that contains the text you are interested in. Rather than, or along with, using a web browser's inspector, simply enter the url and search term, and Nokogiri Pathfinder will traverse the Nokogiri tree to find the shortest .CSS path to the node.
 
 
 INSTALLATION
@@ -13,7 +13,11 @@ git clone https://github.com/lastromanticx/nokogiri-pathfinder
 2. Move into the gem's directory:
 cd nokogiri-pathfinder
 
-3. To run the cli from terminal, type:
+3. (optional) Build and install:
+gem build nokogiri-pathfinder.gemspec
+gem install nokogiri-pathfinder-0.1.0.gem
+
+4. To run the CLI from a terminal in the gem's directory, type:
 ruby bin/nokogiri-pathfinder
 
 
