@@ -29,11 +29,11 @@ class NokogiriPathfinder::Query
   end
 
   def needle
-    @search_term.downcase
+    Regexp.new(Regexp.quote(@search_term),Regexp::IGNORECASE)
   end
 
   def second_needle
-    @second_search_term.downcase
+    Regexp.new(Regexp.quote(@second_search_term),Regexp::IGNORECASE)
   end
 
   def find
@@ -45,7 +45,7 @@ class NokogiriPathfinder::Query
       
       # if the class is 'text', check for a match
       if options[:text] and curr.class == NokogiriPathfinder::NOKOGIRI_XML_TEXT
-        if curr.text.downcase.match(needle)
+        if needle.match(curr.text)
           @paths << {:node_path => path + ".text", 
                      :class_path => classes,
                      :object => curr.parent}
@@ -97,16 +97,16 @@ class NokogiriPathfinder::Query
   def match_attributes(node)
     case node.name
     when "a"
-      if options[:href] and node.attribute("href") and node.attribute("href").value.downcase.match(needle)
+      if options[:href] and node.attribute("href") and needle.match(node.attribute("href").value)
         ".attribute('href').value"
       end
 
     when "img"
-      if options[:src] and node.attribute("src") and node.attribute("src").value.downcase.match(needle)
+      if options[:src] and node.attribute("src") and needle.match(node.attribute("src").value)
         "attribute('src').value"
       end
 
-      if options[:alt] and node.attribute("alt") and node.attribute("alt").value.downcase.match(needle)
+      if options[:alt] and node.attribute("alt") and needle.match(node.attribute("alt").value)
         ".attribute('alt').value"
       end
     end

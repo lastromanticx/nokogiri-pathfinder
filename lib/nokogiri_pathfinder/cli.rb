@@ -30,8 +30,8 @@ class NokogiriPathfinder::CLI
     puts "\nPlease enter a second search term (or press return to leave blank:)"
     second_search_term = gets.strip
 =end
-    puts "\nPlease enter options separated by commas (text, href, alt, and/or src). Blank or unlisted will default to text:"
-    options = gets.strip
+    puts "\nPlease enter options separated by commas (all for all; or text, href, alt, and/or src). Blank or unlisted will default to text:"
+    options = gets.strip.downcase
     options_hash = {:text => false, 
                     :href => false, 
                     :src => false, 
@@ -40,6 +40,10 @@ class NokogiriPathfinder::CLI
     if options == "" then options_hash[:text] = true end
 
     options.split(/\s*,\s*/).each_with_object(options_hash){|option,hash| hash[option.to_sym] = true}
+
+    if options == "all"
+      options_hash.each{|k,v| options_hash[k] = true}
+    end
 
     {:url => url, 
      :search_term => search_term,
@@ -99,7 +103,7 @@ class NokogiriPathfinder::CLI
         puts "Are you sure you want to clear the history? Type (yes/no)"
         answer = ""
         until answer == "yes" or answer == "no"
-          answer = gets.strip
+          answer = gets.strip.downcase
         end
 
         if answer =="yes"
