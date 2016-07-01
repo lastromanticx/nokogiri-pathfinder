@@ -19,8 +19,6 @@ class NokogiriPathfinder::Query
     @options = args[:options]
     @paths = []
     self.class.all << self
-
-    # to do: handle file open error
   end
 
   def url=(url)
