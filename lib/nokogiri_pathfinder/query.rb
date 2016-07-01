@@ -1,6 +1,6 @@
 class NokogiriPathfinder::Query
   attr_reader :url, :nokogiri_html, :paths
-  attr_accessor :search_term, :second_search_term, :options
+  attr_accessor :search_term, :options
 
   @@all = []
 
@@ -15,7 +15,6 @@ class NokogiriPathfinder::Query
   def initialize(args)
     @url = args[:url]
     @search_term = args[:search_term]
-    @second_search_term = args[:second_search_term]
     @nokogiri_html = NokogiriPathfinder::Handle.new(args[:url]).nokogiri_html
     @options = args[:options]
     @paths = []
@@ -30,10 +29,6 @@ class NokogiriPathfinder::Query
 
   def needle
     Regexp.new(Regexp.quote(@search_term),Regexp::IGNORECASE)
-  end
-
-  def second_needle
-    Regexp.new(Regexp.quote(@second_search_term),Regexp::IGNORECASE)
   end
 
   def find

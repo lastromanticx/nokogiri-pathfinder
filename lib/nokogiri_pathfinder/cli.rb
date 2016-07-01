@@ -24,12 +24,6 @@ class NokogiriPathfinder::CLI
       search_term = gets.strip
     end
 
-# to do: add second search term
-    second_search_term = ""
-=begin
-    puts "\nPlease enter a second search term (or press return to leave blank:)"
-    second_search_term = gets.strip
-=end
     puts "\nPlease enter options separated by commas (all for all; or text, href, alt, and/or src). Blank or unlisted will default to text:"
     options = gets.strip.downcase
     options_hash = {:text => false, 
@@ -47,7 +41,6 @@ class NokogiriPathfinder::CLI
 
     {:url => url, 
      :search_term => search_term,
-     :second_search_term => second_search_term,
      :options => options_hash}
   end
 
